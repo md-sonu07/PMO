@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,31 +13,104 @@
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
         }
-        .prose { max-width: 80ch; }
-        .prose h2, .prose h3, .prose h4 { font-weight: 700; margin-top: 2em; margin-bottom: 0.8em; }
-        .prose h2 { font-size: 1.875rem; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.3em; }
-        .prose h3 { font-size: 1.5rem; }
-        .prose h4 { font-size: 1.25rem; }
-        .prose p, .prose ul, .prose ol { margin-bottom: 1.2em; line-height: 1.7; }
-        .prose ul { list-style-position: outside; list-style-type: disc; padding-left: 1.5rem; }
-        .prose ol { list-style-position: outside; list-style-type: decimal; padding-left: 1.5rem; }
-        .prose li { margin-bottom: 0.5em; }
-        .prose blockquote { border-left: 4px solid #4f46e5; padding-left: 1rem; margin-left: 0; font-style: italic; color: #4b5563; background-color: #f3f4f6; padding: 0.5rem 1rem; }
-        .active-topic { background-color: #eef2ff; color: #4338ca; font-weight: 600; }
-        .fade-in { animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .prose {
+            max-width: 80ch;
         }
+
+        .prose h2,
+        .prose h3,
+        .prose h4 {
+            font-weight: 700;
+            margin-top: 2em;
+            margin-bottom: 0.8em;
+        }
+
+        .prose h2 {
+            font-size: 1.875rem;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.3em;
+        }
+
+        .prose h3 {
+            font-size: 1.5rem;
+        }
+
+        .prose h4 {
+            font-size: 1.25rem;
+        }
+
+        .prose p,
+        .prose ul,
+        .prose ol {
+            margin-bottom: 1.2em;
+            line-height: 1.7;
+        }
+
+        .prose ul {
+            list-style-position: outside;
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+
+        .prose ol {
+            list-style-position: outside;
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+        }
+
+        .prose li {
+            margin-bottom: 0.5em;
+        }
+
+        .prose blockquote {
+            border-left: 4px solid #4f46e5;
+            padding-left: 1rem;
+            margin-left: 0;
+            font-style: italic;
+            color: #4b5563;
+            background-color: #f3f4f6;
+            padding: 0.5rem 1rem;
+        }
+
+        .active-topic {
+            background-color: #eef2ff;
+            color: #4338ca;
+            font-weight: 600;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .integrated-quiz {
             border: 1px solid #e5e7eb;
             background-color: #f9fafb;
         }
+
         /* Mobile Menu Transition */
-        .mobile-menu-closed { transform: translateX(-100%); }
-        .mobile-menu-open { transform: translateX(0); }
+        .mobile-menu-closed {
+            transform: translateX(-100%);
+        }
+
+        .mobile-menu-open {
+            transform: translateX(0);
+        }
     </style>
 </head>
+
 <body class="bg-gray-50 text-gray-800 antialiased">
 
     <div id="app" class="min-h-screen flex flex-col">
@@ -44,30 +118,32 @@
         <header class="bg-white shadow-md sticky top-0 z-30">
             <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
                 <div class="text-xl sm:text-2xl font-bold text-indigo-600">
-                    <i class="fas fa-chart-bar mr-2"></i> <span class="">PMO</span> 
-                    
+                    <i class="fas fa-chart-bar mr-2"></i> <span class="">PMO</span>
+
                 </div>
                 <div class="text-xl sm:text-2xl max-[500px]:hidden font-bold text-indigo-600">
                     <i class="fas fa-book-open mr-2"></i>Management Theory & Test
                 </div>
                 <div class="max:hidden">
                 </div>
-                 <!-- Hamburger Button -->
+                <!-- Hamburger Button -->
                 <div class="md:hidden">
                     <button id="hamburger-btn" class="text-gray-600 hover:text-indigo-600 focus:outline-none text-2xl">
-                        <i class="fas fa-bars"></i>
+                        <i class="fas fa-bars"></i> Topics
                     </button>
                 </div>
             </nav>
         </header>
 
         <!-- Mobile Off-canvas Menu -->
-        <div id="mobile-menu-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"></div>
-        <div id="mobile-menu" class="fixed top-0 left-0 h-full w-72 bg-white z-50 shadow-xl transition-transform duration-300 ease-in-out mobile-menu-closed">
+        <div id="mobile-menu-overlay"
+            class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"></div>
+        <div id="mobile-menu"
+            class="fixed top-0 left-0 h-full w-72 bg-white z-50 shadow-xl transition-transform duration-300 ease-in-out mobile-menu-closed">
             <div class="p-4">
                 <div class="flex justify-between items-center mb-4">
-                     <h3 class="text-xl font-bold">Topics</h3>
-                     <button id="close-menu-btn" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+                    <h3 class="text-xl font-bold">Topics</h3>
+                    <button id="close-menu-btn" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
                 </div>
                 <ul id="mobile-topics-list" class="space-y-1"></ul>
             </div>
@@ -77,25 +153,28 @@
         <main class="flex-grow container mx-auto p-4 md:p-8">
             <!-- Main Theory & Test View -->
             <div id="theory-view" class="fade-in">
-                <div class="flex flex-col md:flex-row gap-8">
+                <div class="flex  flex-col md:flex-row gap-8">
                     <!-- Desktop Sidebar -->
-                    <aside class="hidden md:block md:w-1/3 lg:w-1/4">
-                        <div class="bg-white p-6 rounded-xl shadow-lg self-start md:sticky md:top-24 max-h-[80vh] overflow-y-auto">
+
+                    <aside class="hidden md:fixed md:block w-1/3 lg:w-1/4  top-24">
+                        <div
+                            class="bg-white p-6 rounded-xl shadow-lg self-start md:sticky md:top-24 max-h-[80vh] overflow-y-auto">
                             <h3 class="text-xl font-bold mb-4">Topics</h3>
                             <ul id="desktop-topics-list" class="space-y-1"></ul>
                         </div>
                     </aside>
-                    <main id="theory-content-area" class="w-full md:w-2/3 lg:w-3/4 bg-white p-6 md:p-10 rounded-xl shadow-lg">
+                    <main id="theory-content-area"
+                        class="w-full md:ml-[33.3333%] lg:ml-[30%] bg-white p-6 md:p-10 rounded-xl shadow-lg">
                         <div id="theory-text-content" class="prose"></div>
                         <div id="integrated-quiz-container" class="mt-12"></div>
                     </main>
                 </div>
             </div>
         </main>
-        
-        <footer class="bg-white mt-12 py-6 border-t">
-            <div class="container mx-auto text-center text-gray-500">
-                <p>&copy; 2024 Management Studies Hub. All Rights Reserved.</p>
+
+        <footer class="md:relative mx-md:bg-white mt-12 py-2 max-md:border-t">
+            <div class="container  md:absolute  md:bottom-6 p-2 text-center text-gray-500">
+                <p>&copy; 2025 Management Studies Hub.</p>
             </div>
         </footer>
 
@@ -104,7 +183,7 @@
     <script>
         // --- DATA STORE ---
         const theoryData = {
-             'intro': {
+            'intro': {
                 title: 'Introduction & Nature',
                 content: `
                     <h2>What is Management?</h2>
@@ -173,7 +252,7 @@
                     <h3>Nature of Planning:</h3><ul><li><strong>Continuous Process:</strong> Plans are constantly reviewed and revised.</li><li><strong>Concerns all Managers:</strong> Every manager plans within their scope of authority.</li><li><strong>Hierarchical:</strong> Corporate plans lead to departmental and sectional plans.</li><li><strong>Future-Oriented:</strong> It commits an organization to a future path.</li></ul>
                     <h3>Procedure of Planning:</h3><ol><li><strong>Setting Objectives:</strong> Defining what the organization wants to achieve.</li><li><strong>Developing Premises:</strong> Making assumptions about the future environment.</li><li><strong>Identifying Alternatives:</strong> Finding different courses of action.</li><li><strong>Evaluating Alternatives:</strong> Assessing the pros and cons of each option.</li><li><strong>Selecting an Alternative:</strong> Choosing the best course of action.</li><li><strong>Implementing the Plan:</strong> Putting the plan into action.</li><li><strong>Follow-Up Action:</strong> Monitoring progress and making adjustments.</li></ol>`
             },
-             'organization': {
+            'organization': {
                 title: 'Organization',
                 content: `
                     <h2>Organization</h2>
@@ -188,7 +267,7 @@
                     <h3>Formal vs. Informal Organization</h3><ul><li><strong>Formal:</strong> The deliberately planned structure of roles and relationships created by management, shown on an org chart.</li><li><strong>Informal:</strong> The network of personal and social relationships that arise spontaneously.</li></ul>
                     <h3>Core Concepts</h3><ul><li><strong>Departmentation:</strong> Grouping activities into departments based on function, product, geography, etc.</li><li><strong>Span of Management:</strong> The number of subordinates a manager can effectively supervise.</li><li><strong>Authority:</strong> The power to take decisions and issue instructions. It should be commensurate with responsibility.</li><li><strong>Responsibility:</strong> The obligation to perform assigned tasks.</li><li><strong>Delegation:</strong> The process of assigning authority to a subordinate to perform specific activities.</li><li><strong>Centralization:</strong> Decision-making power is confined to top management.</li><li><strong>Decentralization:</strong> Selective dispersal of authority to lower levels of the organization.</li></ul>`
             },
-             'staffing': {
+            'staffing': {
                 title: 'Staffing',
                 content: `
                     <h2>Staffing</h2>
@@ -219,6 +298,42 @@
                      <blockquote><strong>Peter F. Drucker:</strong> "Social responsibility requires managers to consider whether their actions are likely to promote the public good, to advance the basic belief of society, to contribute to its stability strength and harmony."</blockquote>
                     <p>This concept is also known as corporate social responsibility (CSR), sustainable responsible business, or corporate citizenship.</p>`
             },
+            
+            'feedback': {
+                title: 'Feedback & Report Issues',
+                content: `
+                    <h2>Feedback or Report a Mistake</h2>
+                    <p>If you notice any mistake in the theory content, MCQs, or if something doesn't load or work properly, please feel free to let me know.</p>
+                    <p>Your suggestions are always welcome. They help improve the app for everyone using it.</p>
+                    <h4>How to Report</h4>
+                    <ul>
+                        <li>📌 Mention the topic name or section where you found the issue</li>
+                        <li>📝 Describe the mistake clearly (e.g., wrong answer, spelling error, missing content)</li>
+                        <li>💡 You can also share ideas to make the app better</li>
+                    </ul>
+                    <p>📩 Send all feedback or reports to: <strong>mdd301396@gmail.com</strong></p>
+                    <p>Thank you for helping make this app more useful for all students! 🙌</p>`
+            },
+            'about': {
+                title: 'About This App',
+                content: `
+                    <h2>About the PMO Management App</h2>
+                    <p>This app is designed to help students easily study <strong>Principles of Management and Organisation (PMO)</strong> based on our syllabus and the content provided by our sir.</p>
+                    <p>It includes well-structured <strong>theory notes</strong> and <strong>MCQ-based tests</strong> to help you understand concepts and test your knowledge in one place.</p>
+                    <h4>Key Features:</h4>
+                    <ul>
+                        <li>📘 Simple and organized theory content</li>
+                        <li>📝 Quick MCQ tests after each topic</li>
+                        <li>📱 Mobile-friendly and easy to navigate</li>
+                        <li>💡 Regular updates based on your feedback</li>
+                    </ul>
+                    <p>Whether you're preparing for exams or revising topics, this app makes your PMO study journey smoother and smarter.</p>
+                    <hr>
+                    <p><strong>Made with 💙 by Md Sonu</strong></p>
+                    <p>🔗 GitHub: <a href="https://github.com/md-sonu07/" target="_blank">github.com/md-sonu07</a></p>
+                    <p>🔗 LinkedIn: <a href="https://www.linkedin.com/in/md-sonu-b369a632a/" target="_blank">/Md Sonu</a></p>
+                `
+            }
         };
         const topicMcqs = {
             'intro': [
@@ -232,11 +347,11 @@
                 { question: "Which statement best describes management?", options: ["It is only for business concerns", "It is an activity like walking or reading", "It is a process to achieve organizational goals", "It is focused solely on controlling employees"], answer: "It is a process to achieve organizational goals" }
             ],
             'admin_vs_mgmt': [
-                 { question: "Who first distinguished between 'administration' and 'management' in 1923?", options: ["Henri Fayol", "F.W. Taylor", "Oliver Sheldon", "Max Weber"], answer: "Oliver Sheldon" },
-                 { question: "In the view where 'Administration is Beyond Management', what is the primary role of administration?", options: ["Executing tasks", "Supervising workers", "Formulating policies", "Routine functions"], answer: "Formulating policies" },
-                 { question: "What is the most widely accepted modern view on the relationship between administration and management?", options: ["Administration is superior to management", "Management is superior to administration", "They are essentially the same", "They are completely unrelated"], answer: "They are essentially the same" },
-                 { question: "Which thinker is associated with the view that administration and management are equivalent?", options: ["Oliver Sheldon", "Henri Fayol", "F.W. Taylor", "Max Weber"], answer: "Henri Fayol" },
-                 { question: "If administration is seen as a 'unit of management', it is typically responsible for:", options: ["Strategic decision making", "Routine and periodic functions", "Setting the company's vision", "External relations"], answer: "Routine and periodic functions" }
+                { question: "Who first distinguished between 'administration' and 'management' in 1923?", options: ["Henri Fayol", "F.W. Taylor", "Oliver Sheldon", "Max Weber"], answer: "Oliver Sheldon" },
+                { question: "In the view where 'Administration is Beyond Management', what is the primary role of administration?", options: ["Executing tasks", "Supervising workers", "Formulating policies", "Routine functions"], answer: "Formulating policies" },
+                { question: "What is the most widely accepted modern view on the relationship between administration and management?", options: ["Administration is superior to management", "Management is superior to administration", "They are essentially the same", "They are completely unrelated"], answer: "They are essentially the same" },
+                { question: "Which thinker is associated with the view that administration and management are equivalent?", options: ["Oliver Sheldon", "Henri Fayol", "F.W. Taylor", "Max Weber"], answer: "Henri Fayol" },
+                { question: "If administration is seen as a 'unit of management', it is typically responsible for:", options: ["Strategic decision making", "Routine and periodic functions", "Setting the company's vision", "External relations"], answer: "Routine and periodic functions" }
             ],
             'levels': [
                 { question: "Which level of management is responsible for setting the organization's objectives and broad policies?", options: ["Lower Level", "Middle Level", "Supervisory Level", "Top Level"], answer: "Top Level" },
@@ -287,13 +402,13 @@
                 { question: "Which statement best describes the nature of planning?", options: ["It is a static, one-time event", "It is hierarchical and concerns all managers", "It is only concerned with the past", "It has no impact on future effectiveness"], answer: "It is hierarchical and concerns all managers" },
                 { question: "Assessing the pros and cons of different courses of action is which step in planning?", options: ["Identifying Alternatives", "Developing Premises", "Evaluating Alternatives", "Setting Objectives"], answer: "Evaluating Alternatives" }
             ],
-             'organization': [
-                 { question: "The simplest organization form with a direct vertical chain of command is:", options: ["Line and Staff", "Matrix", "Committee", "Line Organization"], answer: "Line Organization" },
-                 { question: "Which theory views the organization as an open, adaptive system interacting with its environment?", options: ["Classical Theory", "Neo-Classical Theory", "Modern Theory", "Scientific Management"], answer: "Modern Theory" },
-                 { question: "What is the primary advantage of a Line and Staff organization over a Line organization?", options: ["It is simpler", "It has a clearer chain of command", "It incorporates specialist advice", "It is less expensive"], answer: "It incorporates specialist advice" },
-                 { question: "The Classical theory of organization views the organization as a:", options: ["Social system", "Machine", "Family", "Chaotic system"], answer: "Machine" },
-                 { question: "In a Line and Staff organization, what kind of authority do staff members have?", options: ["Direct command authority", "Advisory authority", "No authority", "Superior authority over line managers"], answer: "Advisory authority" },
-                 { question: "Grouping activities by business functions like Marketing or Finance is known as:", options: ["Line Organization", "Matrix Organization", "Functional Organization", "Line and Staff Organization"], answer: "Functional Organization" }
+            'organization': [
+                { question: "The simplest organization form with a direct vertical chain of command is:", options: ["Line and Staff", "Matrix", "Committee", "Line Organization"], answer: "Line Organization" },
+                { question: "Which theory views the organization as an open, adaptive system interacting with its environment?", options: ["Classical Theory", "Neo-Classical Theory", "Modern Theory", "Scientific Management"], answer: "Modern Theory" },
+                { question: "What is the primary advantage of a Line and Staff organization over a Line organization?", options: ["It is simpler", "It has a clearer chain of command", "It incorporates specialist advice", "It is less expensive"], answer: "It incorporates specialist advice" },
+                { question: "The Classical theory of organization views the organization as a:", options: ["Social system", "Machine", "Family", "Chaotic system"], answer: "Machine" },
+                { question: "In a Line and Staff organization, what kind of authority do staff members have?", options: ["Direct command authority", "Advisory authority", "No authority", "Superior authority over line managers"], answer: "Advisory authority" },
+                { question: "Grouping activities by business functions like Marketing or Finance is known as:", options: ["Line Organization", "Matrix Organization", "Functional Organization", "Line and Staff Organization"], answer: "Functional Organization" }
             ],
             'org_concepts': [
                 { question: "The number of subordinates a manager can effectively supervise is called:", options: ["Chain of Command", "Unity of Direction", "Span of Management", "Delegation"], answer: "Span of Management" },
@@ -303,7 +418,7 @@
                 { question: "Granting a subordinate the power to take decisions and issue instructions is an example of:", options: ["Responsibility", "Delegation", "Span of Management", "Centralization"], answer: "Delegation" },
                 { question: "In which structure is decision-making power confined to top management?", options: ["Decentralization", "Delegation", "Centralization", "Informal Organization"], answer: "Centralization" }
             ],
-             'staffing': [
+            'staffing': [
                 { question: "The management function of finding the right people for the right job is:", options: ["Planning", "Organizing", "Staffing", "Controlling"], answer: "Staffing" },
                 { question: "The 'positive' process of searching for prospective employees is:", options: ["Selection", "Training", "Recruitment", "Development"], answer: "Recruitment" },
                 { question: "Which staffing activity is often described as a 'negative' process because more candidates are turned away than hired?", options: ["Recruitment", "Selection", "Training", "Welfare"], answer: "Selection" },
@@ -312,11 +427,11 @@
                 { question: "The primary purpose of recruitment is to:", options: ["Hire the first person who applies", "Create a large pool of applicants", "Test the applicants", "Train new employees"], answer: "Create a large pool of applicants" }
             ],
             'directing': [
-                 { question: "A person who is responsible for overseeing a team, setting goals, and delegating tasks is a:", options: ["Leader", "Supervisor", "Mentor", "Consultant"], answer: "Supervisor" },
-                 { question: "Open communication and positive reinforcement are key components of:", options: ["Controlling", "Planning", "Budgeting", "Motivation"], answer: "Motivation" },
-                 { question: "The directing function of management includes:", options: ["Setting standards and budgeting", "Recruitment and selection", "Leadership, communication, and motivation", "Creating departments"], answer: "Leadership, communication, and motivation" },
-                 { question: "What is the key difference between a leader and a supervisor?", options: ["A leader has a formal title, a supervisor does not", "A leader influences and empowers, while a supervisor's role is defined by authority", "Supervisors are always better leaders", "There is no difference"], answer: "A leader influences and empowers, while a supervisor's role is defined by authority" },
-                 { question: "Acknowledging work well done is an example of which motivational technique?", options: ["Negative reinforcement", "Punishment", "Positive reinforcement", "Extinction"], answer: "Positive reinforcement" }
+                { question: "A person who is responsible for overseeing a team, setting goals, and delegating tasks is a:", options: ["Leader", "Supervisor", "Mentor", "Consultant"], answer: "Supervisor" },
+                { question: "Open communication and positive reinforcement are key components of:", options: ["Controlling", "Planning", "Budgeting", "Motivation"], answer: "Motivation" },
+                { question: "The directing function of management includes:", options: ["Setting standards and budgeting", "Recruitment and selection", "Leadership, communication, and motivation", "Creating departments"], answer: "Leadership, communication, and motivation" },
+                { question: "What is the key difference between a leader and a supervisor?", options: ["A leader has a formal title, a supervisor does not", "A leader influences and empowers, while a supervisor's role is defined by authority", "Supervisors are always better leaders", "There is no difference"], answer: "A leader influences and empowers, while a supervisor's role is defined by authority" },
+                { question: "Acknowledging work well done is an example of which motivational technique?", options: ["Negative reinforcement", "Punishment", "Positive reinforcement", "Extinction"], answer: "Positive reinforcement" }
             ],
             'controlling': [
                 { question: "Which function involves comparing actual performance with standards and taking corrective action?", options: ["Planning", "Directing", "Coordinating", "Controlling"], answer: "Controlling" },
@@ -361,7 +476,7 @@
                 mobileMenuOverlay.classList.add('hidden');
                 document.body.style.overflow = ''; // Restore scroll
             };
-            
+
             hamburgerBtn.addEventListener('click', openMobileMenu);
             closeMenuBtn.addEventListener('click', closeMobileMenu);
             mobileMenuOverlay.addEventListener('click', closeMobileMenu);
@@ -406,10 +521,10 @@
                     index: 0,
                     score: 0,
                 };
-                
+
                 document.getElementById('integrated-question-container').classList.remove('hidden');
                 document.getElementById('integrated-result-view').classList.add('hidden');
-                
+
                 document.getElementById('integrated-retry-btn').onclick = () => startIntegratedQuiz(key);
                 document.getElementById('integrated-next-question-btn').onclick = () => {
                     integratedQuizState.index++;
@@ -421,7 +536,7 @@
                 };
                 displayIntegratedQuestion();
             };
-            
+
             const displayIntegratedQuestion = () => {
                 const { questions, index } = integratedQuizState;
                 const question = questions[index];
@@ -460,7 +575,7 @@
                     button.className = 'w-full text-left p-3 border-2 border-red-500 rounded-lg bg-red-50';
                     feedbackContainer.innerHTML = `<p class="font-semibold text-sm text-red-700">Incorrect. The correct answer was: <strong>${question.answer}</strong></p>`;
                 }
-                
+
                 const nextBtn = document.getElementById('integrated-next-question-btn');
                 nextBtn.disabled = false;
                 nextBtn.textContent = (index === questions.length - 1) ? 'Show Results' : 'Next';
@@ -500,4 +615,5 @@
         });
     </script>
 </body>
+
 </html>
