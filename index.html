@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Management Theory & MCQ App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .prose { max-width: 80ch; }
+        .prose h2, .prose h3, .prose h4 { font-weight: 700; margin-top: 2em; margin-bottom: 0.8em; }
+        .prose h2 { font-size: 1.875rem; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.3em; }
+        .prose h3 { font-size: 1.5rem; }
+        .prose h4 { font-size: 1.25rem; }
+        .prose p, .prose ul, .prose ol { margin-bottom: 1.2em; line-height: 1.7; }
+        .prose ul { list-style-position: outside; list-style-type: disc; padding-left: 1.5rem; }
+        .prose ol { list-style-position: outside; list-style-type: decimal; padding-left: 1.5rem; }
+        .prose li { margin-bottom: 0.5em; }
+        .prose blockquote { border-left: 4px solid #4f46e5; padding-left: 1rem; margin-left: 0; font-style: italic; color: #4b5563; background-color: #f3f4f6; padding: 0.5rem 1rem; }
+        .active-topic { background-color: #eef2ff; color: #4338ca; font-weight: 600; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .integrated-quiz {
+            border: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+        }
+        /* Mobile Menu Transition */
+        .mobile-menu-closed { transform: translateX(-100%); }
+        .mobile-menu-open { transform: translateX(0); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    <div id="app" class="min-h-screen flex flex-col">
+
+        <header class="bg-white shadow-md sticky top-0 z-30">
+            <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <div class="text-xl sm:text-2xl font-bold text-indigo-600">
+                    <i class="fas fa-chart-bar mr-2"></i> <span class="">PMO</span> 
+                    
+                </div>
+                <div class="text-xl sm:text-2xl max-[500px]:hidden font-bold text-indigo-600">
+                    <i class="fas fa-book-open mr-2"></i>Management Theory & Test
+                </div>
+                <div class="max:hidden">
+                </div>
+                 <!-- Hamburger Button -->
+                <div class="md:hidden">
+                    <button id="hamburger-btn" class="text-gray-600 hover:text-indigo-600 focus:outline-none text-2xl">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Mobile Off-canvas Menu -->
+        <div id="mobile-menu-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"></div>
+        <div id="mobile-menu" class="fixed top-0 left-0 h-full w-72 bg-white z-50 shadow-xl transition-transform duration-300 ease-in-out mobile-menu-closed">
+            <div class="p-4">
+                <div class="flex justify-between items-center mb-4">
+                     <h3 class="text-xl font-bold">Topics</h3>
+                     <button id="close-menu-btn" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+                </div>
+                <ul id="mobile-topics-list" class="space-y-1"></ul>
+            </div>
+        </div>
+
+
+        <main class="flex-grow container mx-auto p-4 md:p-8">
+            <!-- Main Theory & Test View -->
+            <div id="theory-view" class="fade-in">
+                <div class="flex flex-col md:flex-row gap-8">
+                    <!-- Desktop Sidebar -->
+                    <aside class="hidden md:block md:w-1/3 lg:w-1/4">
+                        <div class="bg-white p-6 rounded-xl shadow-lg self-start md:sticky md:top-24 max-h-[80vh] overflow-y-auto">
+                            <h3 class="text-xl font-bold mb-4">Topics</h3>
+                            <ul id="desktop-topics-list" class="space-y-1"></ul>
+                        </div>
+                    </aside>
+                    <main id="theory-content-area" class="w-full md:w-2/3 lg:w-3/4 bg-white p-6 md:p-10 rounded-xl shadow-lg">
+                        <div id="theory-text-content" class="prose"></div>
+                        <div id="integrated-quiz-container" class="mt-12"></div>
+                    </main>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="bg-white mt-12 py-6 border-t">
+            <div class="container mx-auto text-center text-gray-500">
+                <p>&copy; 2024 Management Studies Hub. All Rights Reserved.</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // --- DATA STORE ---
+        const theoryData = {
+             'intro': {
+                title: 'Introduction & Nature',
+                content: `
+                    <h2>What is Management?</h2>
+                    <p>Management can be defined as the process carried out to achieve the goals of the organization by planning, organizing, leading, and controlling resources. It is essential not only for business concerns but also for banks, schools, colleges, hospitals, and other institutions.</p>
+                    <blockquote><strong>Peter F. Drucker:</strong> "Management is an organ; organs can be described and defined only through their functions."</blockquote>
+                    <blockquote><strong>Henry Fayol:</strong> "To manage is to forecast and plan, to organize, to compound, to co-ordinate and to control."</blockquote>
+                    <h2>Nature of Management</h2>
+                    <p>Management is a multifaceted concept, viewed as a science, an art, and a profession.</p>
+                    <h4>Management as a Science</h4><p>It's considered a social science because it has a systematized body of knowledge and uses scientific methods of observation and experimentation (pioneered by F.W. Taylor). However, it's not an exact science as it deals with unpredictable human behavior.</p>
+                    <h4>Management as an Art</h4><p>It's an art because it requires creativity, personal skills, and practical application to solve real-world problems and adapt learned principles to specific situations.</p>
+                    <h4>Management as a Profession</h4><p>Management is evolving into a profession with a specialized body of knowledge, formal education, a code of conduct, and a service motive. The separation of ownership and management in modern corporations has professionalized the manager's role.</p>`
+            },
+            'admin_vs_mgmt': {
+                title: 'Administration vs. Management',
+                content: `
+                    <h2>Management vs. Administration</h2>
+                    <p>There are varying viewpoints on the relationship between management and administration. In 1923, Oliver Sheldon first distinguished between the two.</p>
+                    <h4>1. Administration is Beyond Management</h4><p>This view holds that administration is a higher-level function, primarily concerned with policy formulation and decision-making, while management is concerned with the execution of those policies.</p>
+                    <h4>2. Administration is a Unit of Management</h4><p>This approach sees management as a broader term that includes administrative functions. Here, administration handles routine, periodic tasks while management focuses on policy creation.</p>
+                    <h4>3. Administration and Management are Equivalent</h4><p>The most common modern view, supported by thinkers like Henri Fayol, is that there is no significant difference between the two. Both involve similar functions, processes, and principles aimed at achieving organizational goals.</p>`
+            },
+            'levels': {
+                title: 'Levels of Management',
+                content: `
+                    <h2>Levels of Management</h2>
+                    <p>Managerial positions are typically divided into three levels, forming a hierarchy of command and authority.</p>
+                    <h3>1. Top Level (Administrative Level)</h3><p>Consists of the Board of Directors, CEO, or Managing Director. They are the ultimate source of authority.</p><ul><li>Set objectives and broad policies.</li><li>Prepare strategic plans & policies.</li><li>Appoint middle-level managers.</li><li>Control and coordinate all departments.</li></ul>
+                    <h3>2. Middle Level (Executory Level)</h3><p>Includes branch and departmental managers. They are responsible to top management for their department's functioning.</p><ul><li>Execute plans from top management.</li><li>Make plans for their sub-units.</li><li>Participate in employment and training of lower-level management.</li><li>Interpret and explain policies to lower levels.</li></ul>
+                    <h3>3. Lower Level (Supervisory / Operative Level)</h3><p>Consists of supervisors and foremen. They are directly involved with the workforce.</p><ul><li>Assign jobs and tasks to workers.</li><li>Guide and instruct workers daily.</li><li>Responsible for the quality and quantity of production.</li><li>Solve worker grievances and maintain discipline.</li></ul>`
+            },
+            'evolution_classical': {
+                title: 'Evolution: Classical Theory',
+                content: `
+                    <h2>Evolution of Management Thought: Classical Theory</h2>
+                    <p>The classical approach (or traditional approach) focused on the anatomy of the formal organization for greater efficiency. It emphasized division of labor, specialization, and structure. It has three main streams:</p>
+                    <h3>A1. Bureaucracy (Max Weber)</h3><p>Max Weber described an ideal type of organization called a <strong>bureaucracy</strong>. He saw it as a formal system of organization based on clearly defined hierarchical levels and roles, detailed rules and regulations, and impersonal relationships. Key elements include:</p><ul><li><strong>Division of Labor:</strong> Jobs are broken down into simple, routine, and well-defined tasks.</li><li><strong>Authority Hierarchy:</strong> Positions are organized in a hierarchy with a clear chain of command.</li><li><strong>Formal Selection:</strong> People are selected for jobs based on technical qualifications.</li><li><strong>Formal Rules & Regulations:</strong> A system of written rules and standard operating procedures.</li><li><strong>Impersonality:</strong> Uniform application of rules and controls, not according to personalities.</li><li><strong>Career Orientation:</strong> Managers are career professionals, not owners of the units they manage.</li></ul>
+                    <h3>A2. Scientific Management (F.W. Taylor)</h3><p>Frederick W. Taylor, the 'father of scientific management', applied scientific methods to management to increase labor efficiency. He believed worker output was only about one-third of what was possible.</p><h4>Taylor's 4 Principles:</h4><ol><li><strong>Scientific Job Analysis:</strong> Replace rule-of-thumb work methods with methods based on a scientific study of the tasks.</li><li><strong>Selection of Personnel:</strong> Scientifically select, train, and develop each worker.</li><li><strong>Management Cooperation:</strong> Cooperate with workers to ensure scientifically developed methods are followed.</li><li><strong>Functional Supervising:</strong> Divide work nearly equally between managers (planning) and workers (performing tasks).</li></ol>
+                    <h3>A3. Process Management (Henri Fayol)</h3><p>This approach, associated with Henri Fayol, focuses on the management process. It involves aligning processes with strategic goals, designing process architectures, and establishing measurement systems. Fayol's work laid the foundation for the functions of management.</p>`
+            },
+            'evolution_neoclassical': {
+                title: 'Evolution: Neoclassical Theory',
+                content: `
+                    <h2>Evolution of Management Thought: Neoclassical Theory</h2>
+                    <p>The neoclassical approach emerged as a reaction to the classical theories, arguing that they didn't fully achieve workplace harmony because they ignored the 'people side' of the organization.</p>
+                    <h3>B1. Human Relations Approach (Elton Mayo)</h3><p>Elton Mayo is considered the father of this school of thought, which grew out of the famous <strong>Hawthorne Studies</strong>. This approach revealed the importance of social and psychological factors in determining worker productivity and satisfaction.</p><h4>Key Propositions:</h4><ul><li>The business organization is a social system, not just a techno-economic system.</li><li>Employees have social and psychological needs, not just economic ones.</li><li>The informal group is a major influence on the behavior of its members.</li><li>Employee-oriented, democratic, and participative management is more effective.</li></ul>
+                    <h3>B2. Behavioural Science Approach (McGregor, Maslow)</h3><p>An extension and refinement of the human relations approach, this uses concepts from psychology, sociology, and anthropology to understand human behavior at work.</p><h4>Key Contributions:</h4><ul><li><strong>Douglas McGregor's Theory X and Y:</strong> Theory X assumes workers are lazy and need to be forced, while Theory Y assumes workers are self-motivated and enjoy work.</li><li><strong>Abraham Maslow's Hierarchy of Needs:</strong> Proposes that humans are motivated by a hierarchy of needs, from basic physiological needs to higher-level self-actualization needs.</li></ul>`
+            },
+            'evolution_modern': {
+                title: 'Evolution: Modern Theories',
+                content: `
+                    <h2>Evolution of Management Thought: Modern Theories</h2>
+                    <p>Modern theories view the organization as an adaptive system that interacts with its environment. They integrate ideas from classical, neoclassical, and other fields.</p>
+                    <h3>Peter Drucker's Contributions</h3><p>Peter Drucker, a highly respected management thinker, viewed management as a practice and a discipline. His key ideas include:</p><ul><li><strong>Management as a Practice:</strong> Its two main functions are innovation and marketing.</li><li><strong>Functions of Management:</strong> (1) Achieve the institution's purpose, (2) make work productive, (3) manage social responsibility.</li><li><strong>Management by Objectives (MBO):</strong> A process where superiors and subordinates jointly set common goals and assess contributions.</li><li><strong>Federalism:</strong> The concept of centralized control within a decentralized structure.</li></ul>`
+            },
+            'functions': {
+                title: 'Management Functions',
+                content: `
+                    <h2>Management Functions</h2>
+                    <p>While classifications vary, a comprehensive framework identifies several core functions. Luther Gulick's acronym <strong>POSDCORB</strong> is a famous example.</p><ul><li><strong>Planning:</strong> Deciding in advance what to do, how to do it, and when. It involves setting objectives and determining courses of action.</li><li><strong>Organizing:</strong> Identifying, grouping, and assigning activities to build a framework of authority and responsibility.</li><li><strong>Staffing:</strong> Manning the organization structure through recruitment, selection, training, and development.</li><li><strong>Directing:</strong> Guiding, motivating, and leading people to achieve objectives. It includes communication and leadership.</li><li><strong>Coordinating:</strong> Synchronizing activities of different individuals and departments for harmonious work.</li><li><strong>Reporting:</strong> Keeping superiors and subordinates informed through records, research, and inspection.</li><li><strong>Budgeting:</strong> Fiscal planning, accounting, and control.</li></ul>`
+            },
+            'planning': {
+                title: 'Planning',
+                content: `
+                    <h2>Planning</h2>
+                    <p>Planning is the most fundamental function of management, involving deciding the future course of action.</p>
+                    <h3>Nature of Planning:</h3><ul><li><strong>Continuous Process:</strong> Plans are constantly reviewed and revised.</li><li><strong>Concerns all Managers:</strong> Every manager plans within their scope of authority.</li><li><strong>Hierarchical:</strong> Corporate plans lead to departmental and sectional plans.</li><li><strong>Future-Oriented:</strong> It commits an organization to a future path.</li></ul>
+                    <h3>Procedure of Planning:</h3><ol><li><strong>Setting Objectives:</strong> Defining what the organization wants to achieve.</li><li><strong>Developing Premises:</strong> Making assumptions about the future environment.</li><li><strong>Identifying Alternatives:</strong> Finding different courses of action.</li><li><strong>Evaluating Alternatives:</strong> Assessing the pros and cons of each option.</li><li><strong>Selecting an Alternative:</strong> Choosing the best course of action.</li><li><strong>Implementing the Plan:</strong> Putting the plan into action.</li><li><strong>Follow-Up Action:</strong> Monitoring progress and making adjustments.</li></ol>`
+            },
+             'organization': {
+                title: 'Organization',
+                content: `
+                    <h2>Organization</h2>
+                    <p>Organization is the backbone of management. It is the process of creating a structure of relationships to enable people to work together effectively.</p>
+                    <h3>Theories of Organization</h3><ul><li><strong>Classical Theory:</strong> Views the organization as a machine and focuses on structure, efficiency, and clear lines of authority.</li><li><strong>Neo-Classical Theory:</strong> Views the organization as a social system, emphasizing human actions, interactions, and both formal and informal structures.</li><li><strong>Modern Theory:</strong> Views the organization as an open, adaptive system that interacts with its environment to survive and grow.</li></ul>
+                    <h3>Forms of Organization Structure</h3><ul><li><strong>Line Organization:</strong> The simplest form with a direct vertical line of authority from top to bottom (military style).</li><li><strong>Line and Staff Organization:</strong> Adds specialist 'staff' positions to advise the 'line' managers who hold command authority.</li><li><strong>Functional Organization:</strong> Groups activities by business function (e.g., Marketing, Finance).</li><li><strong>Committee, Project, and Matrix Organizations</strong> are other specialized forms.</li></ul>`
+            },
+            'org_concepts': {
+                title: 'Key Organizing Concepts',
+                content: `
+                    <h2>Key Organizing Concepts</h2>
+                    <h3>Formal vs. Informal Organization</h3><ul><li><strong>Formal:</strong> The deliberately planned structure of roles and relationships created by management, shown on an org chart.</li><li><strong>Informal:</strong> The network of personal and social relationships that arise spontaneously.</li></ul>
+                    <h3>Core Concepts</h3><ul><li><strong>Departmentation:</strong> Grouping activities into departments based on function, product, geography, etc.</li><li><strong>Span of Management:</strong> The number of subordinates a manager can effectively supervise.</li><li><strong>Authority:</strong> The power to take decisions and issue instructions. It should be commensurate with responsibility.</li><li><strong>Responsibility:</strong> The obligation to perform assigned tasks.</li><li><strong>Delegation:</strong> The process of assigning authority to a subordinate to perform specific activities.</li><li><strong>Centralization:</strong> Decision-making power is confined to top management.</li><li><strong>Decentralization:</strong> Selective dispersal of authority to lower levels of the organization.</li></ul>`
+            },
+             'staffing': {
+                title: 'Staffing',
+                content: `
+                    <h2>Staffing</h2>
+                    <p>Staffing is the function of manning the organization structure and keeping it manned. It's about finding and retaining the right people.</p>
+                    <h3>Key Staffing Activities:</h3><ul><li><strong>Recruitment:</strong> The positive process of searching for prospective employees and stimulating them to apply for jobs. The goal is to create a large pool of applicants.</li><li><strong>Selection:</strong> The process of choosing the most suitable candidates from the applicant pool. It is often a negative process as more candidates are rejected than hired.</li><li><strong>Training:</strong> Providing new and existing employees with the skills, knowledge, and abilities to perform their jobs effectively. It is crucial for handling complex modern production techniques.</li><li><strong>Development:</strong> A continuous process of learning and growth designed to bring about behavioral change in executives, increasing their potential for current and future assignments.</li><li><strong>Welfare:</strong> Encompasses services, facilities, and benefits provided by an employer to motivate employees and improve their well-being and productivity.</li></ul>`
+            },
+            'directing': {
+                title: 'Directing',
+                content: `
+                    <h2>Directing</h2>
+                    <p>Directing is the process of instructing, guiding, counseling, motivating, and leading people in the organization to achieve its objectives.</p>
+                    <h3>Leadership and Supervision</h3><p><strong>Supervisors</strong> are responsible for overseeing a team, setting goals, and delegating tasks. <strong>Leaders</strong>, who may or may not be supervisors, possess qualities that empower and influence others. Effective supervisors are also strong leaders.</p>
+                    <h3>Motivation and Communication</h3><p><strong>Motivation</strong> is the inner drive or need that leads to sustained effort toward a goal. Effective <strong>communication</strong> is critical for motivation. Key steps include:</p><ol><li><strong>Be open with communication:</strong> Share the organization's vision.</li><li><strong>Teach constructive communication skills:</strong> This helps resolve conflicts.</li><li><strong>Establish clear systems:</strong> Ensure everyone knows how to communicate about processes.</li><li><strong>Use positive reinforcement:</strong> Acknowledge good work to empower and motivate continuous improvement.</li></ol>`
+            },
+            'controlling': {
+                title: 'Controlling',
+                content: `
+                    <h2>Controlling</h2>
+                    <p>Controlling is the function of ensuring that performance is consistent with predetermined objectives and plans. It involves identifying and correcting deviations.</p>
+                    <h3>The Control Process</h3><ol><li><strong>Establishment of Standards:</strong> Creating targets and criteria (both tangible and intangible) to judge performance against.</li><li><strong>Measurement of Performance:</strong> Measuring the actual results.</li><li><strong>Comparison of Actual and Standard Performance:</strong> Identifying the gap (deviation) between actual and planned performance. Managers practice "control by exception," focusing on significant deviations.</li><li><strong>Taking Remedial Actions:</strong> Correcting the errors that led to the deviation or, if necessary, revising the targets.</li></ol>
+                    <h3>Techniques of Control</h3><ul><li><strong>Personal Observation:</strong> Managers observe work in progress. Effective but time-consuming and can create pressure.</li><li><strong>Budgeting:</strong> Comparing actual financial performance with a planned budget.</li><li><strong>Break-Even Analysis:</strong> Analyzing the relationship between sales volume, costs, and profits to find the break-even point.</li><li><strong>Financial Statements:</strong> Using statements like balance sheets to compare present performance with past performance.</li></ul>`
+            },
+            'social_responsibility': {
+                title: 'Social Responsibility of Business',
+                content: `
+                    <h2>Social Responsibility of Business</h2>
+                    <p>Social responsibility refers to the voluntary efforts on the part of a business to contribute to social well-being. The moral idea is that since businesses use society's resources, they must give something back.</p>
+                     <blockquote><strong>Peter F. Drucker:</strong> "Social responsibility requires managers to consider whether their actions are likely to promote the public good, to advance the basic belief of society, to contribute to its stability strength and harmony."</blockquote>
+                    <p>This concept is also known as corporate social responsibility (CSR), sustainable responsible business, or corporate citizenship.</p>`
+            },
+        };
+        const topicMcqs = {
+            'intro': [
+                { question: "Which thinker defined management as 'an organ; organs can be described and defined only through their functions'?", options: ["Henri Fayol", "F.W. Taylor", "Peter F. Drucker", "Sir Charles Reynold"], answer: "Peter F. Drucker" },
+                { question: "Viewing management as an 'art' implies that it requires:", options: ["A rigid set of rules", "Only scientific analysis", "Creativity and personal skills", "A professional license"], answer: "Creativity and personal skills" },
+                { question: "Management as a 'profession' is characterized by:", options: ["Hereditary positions", "A specialized body of knowledge and service motive", "Trial and error methods", "Focus only on profit"], answer: "A specialized body of knowledge and service motive" },
+                { question: "Who defined management as 'to forecast and plan, to organize, to compound, to co-ordinate and to control'?", options: ["Peter F. Drucker", "Henry Fayol", "F.W. Taylor", "Terry"], answer: "Henry Fayol" },
+                { question: "The idea that management is a 'social science' suggests it is:", options: ["As exact as physics or chemistry", "Concerned with human behavior and not entirely predictable", "A new field with no history", "Only applicable to social clubs"], answer: "Concerned with human behavior and not entirely predictable" },
+                { question: "Who was a pioneer in applying scientific methods to management?", options: ["Elton Mayo", "Max Weber", "Henri Fayol", "Fredrick W. Taylor"], answer: "Fredrick W. Taylor" },
+                { question: "The separation of ownership from day-to-day activities in large companies has led to management becoming more of a:", options: ["Hobby", "Art", "Science", "Profession"], answer: "Profession" },
+                { question: "Which statement best describes management?", options: ["It is only for business concerns", "It is an activity like walking or reading", "It is a process to achieve organizational goals", "It is focused solely on controlling employees"], answer: "It is a process to achieve organizational goals" }
+            ],
+            'admin_vs_mgmt': [
+                 { question: "Who first distinguished between 'administration' and 'management' in 1923?", options: ["Henri Fayol", "F.W. Taylor", "Oliver Sheldon", "Max Weber"], answer: "Oliver Sheldon" },
+                 { question: "In the view where 'Administration is Beyond Management', what is the primary role of administration?", options: ["Executing tasks", "Supervising workers", "Formulating policies", "Routine functions"], answer: "Formulating policies" },
+                 { question: "What is the most widely accepted modern view on the relationship between administration and management?", options: ["Administration is superior to management", "Management is superior to administration", "They are essentially the same", "They are completely unrelated"], answer: "They are essentially the same" },
+                 { question: "Which thinker is associated with the view that administration and management are equivalent?", options: ["Oliver Sheldon", "Henri Fayol", "F.W. Taylor", "Max Weber"], answer: "Henri Fayol" },
+                 { question: "If administration is seen as a 'unit of management', it is typically responsible for:", options: ["Strategic decision making", "Routine and periodic functions", "Setting the company's vision", "External relations"], answer: "Routine and periodic functions" }
+            ],
+            'levels': [
+                { question: "Which level of management is responsible for setting the organization's objectives and broad policies?", options: ["Lower Level", "Middle Level", "Supervisory Level", "Top Level"], answer: "Top Level" },
+                { question: "Supervisors and foremen belong to which level of management?", options: ["Top Level", "Middle Level", "Lower Level", "Administrative Level"], answer: "Lower Level" },
+                { question: "The 'Executory Level' is another name for which level of management?", options: ["Top Level", "Middle Level", "Lower Level", "Operative Level"], answer: "Middle Level" },
+                { question: "Which of the following is a primary role of middle management?", options: ["Preparing strategic plans for the entire enterprise", "Assigning daily tasks to individual workers", "Executing plans in accordance with top management's policies", "Maintaining contact with the outside world"], answer: "Executing plans in accordance with top management's policies" },
+                { question: "The 'Operative Level' of management is primarily concerned with:", options: ["Long-term strategic planning", "Direction and controlling function of operative employees", "Appointing departmental managers", "Setting broad policies"], answer: "Direction and controlling function of operative employees" },
+                { question: "Who is part of the Top Level of management?", options: ["Section Officers", "Branch Managers", "Board of Directors", "Supervisors"], answer: "Board of Directors" },
+                { question: "Which level of management acts as a link between top and lower-level management?", options: ["Supervisory Level", "Operative Level", "Administrative Level", "Middle Level"], answer: "Middle Level" }
+            ],
+            'evolution_classical': [
+                { question: "Who is known as the 'father of scientific management'?", options: ["Henri Fayol", "Max Weber", "F.W. Taylor", "Elton Mayo"], answer: "F.W. Taylor" },
+                { question: "According to Max Weber, which is a key characteristic of an ideal bureaucracy?", options: ["Informal relationships", "Personalized rules", "A clearly defined hierarchy", "Chaotic communication"], answer: "A clearly defined hierarchy" },
+                { question: "Replacing 'rule-of-thumb' with scientifically studied methods is a core principle of:", options: ["Bureaucracy", "Administrative Theory", "Scientific Management", "Human Relations"], answer: "Scientific Management" },
+                { question: "The classical approach to management treated the organization as a(n):", options: ["Open system", "Social system", "Closed system", "Informal system"], answer: "Closed system" },
+                { question: "Which element is NOT part of Weber's ideal bureaucracy?", options: ["Division of Labor", "Formal Selection", "Impersonality", "Unity of Command"], answer: "Unity of Command" },
+                { question: "Taylor's principle of 'Functional Supervising' involves:", options: ["One boss for all tasks", "Dividing work between managers and workers", "A flexible work schedule", "Promoting based on seniority"], answer: "Dividing work between managers and workers" },
+                { question: "The classical approach placed the most emphasis on:", options: ["Human emotions", "The external environment", "Economic efficiency and formal structure", "Informal group dynamics"], answer: "Economic efficiency and formal structure" }
+            ],
+            'evolution_neoclassical': [
+                { question: "The Hawthorne experiments, basis of the Human Relations Approach, were conducted by:", options: ["Peter Drucker", "Elton Mayo", "Douglas McGregor", "Abraham Maslow"], answer: "Elton Mayo" },
+                { question: "McGregor's theory that assumes people are self-motivated and enjoy work is known as:", options: ["Theory X", "Theory Y", "Hierarchy of Needs", "MBO"], answer: "Theory Y" },
+                { question: "Which management theory views the organization primarily as a social system?", options: ["Classical Theory", "Scientific Management", "Bureaucracy", "Neoclassical Theory"], answer: "Neoclassical Theory" },
+                { question: "The Human Relations movement revealed the importance of:", options: ["Strict rules and regulations", "Economic incentives only", "Informal groups and social factors", "The division of labor"], answer: "Informal groups and social factors" },
+                { question: "Abraham Maslow is associated with which concept in the behavioural science approach?", options: ["Theory X and Theory Y", "The Hawthorne effect", "Hierarchy of Needs", "Bureaucracy"], answer: "Hierarchy of Needs" },
+                { question: "The neoclassical theory emerged because the classical approach ignored:", options: ["Profitability", "The 'people side' of the organization", "Organizational structure", "Efficiency"], answer: "The 'people side' of the organization" }
+            ],
+            'evolution_modern': [
+                { question: "The concept of Management by Objectives (MBO) was popularized by:", options: ["F.W. Taylor", "Max Weber", "Peter Drucker", "Elton Mayo"], answer: "Peter Drucker" },
+                { question: "Peter Drucker's concept of 'federalism' refers to:", options: ["Complete control by government", "Centralized control in a decentralized structure", "A focus on marketing", "The hierarchy of needs"], answer: "Centralized control in a decentralized structure" },
+                { question: "According to Drucker, what are the two most important functions of management?", options: ["Planning and Controlling", "Innovation and Marketing", "Staffing and Directing", "Budgeting and Reporting"], answer: "Innovation and Marketing" },
+                { question: "Modern management theory views the organization as a(n):", options: ["Closed system", "Machine", "Static entity", "Adaptive system interacting with its environment"], answer: "Adaptive system interacting with its environment" },
+                { question: "MBO is a process where superiors and subordinates:", options: ["Rarely interact", "Compete for resources", "Jointly identify common objectives", "Follow a strict chain of command"], answer: "Jointly identify common objectives" }
+            ],
+            'functions': [
+                { question: "The acronym POSDCORB for management functions was coined by:", options: ["Henri Fayol", "Luther Gulick", "Terry", "Koontz and O'Donnell"], answer: "Luther Gulick" },
+                { question: "The function of 'Staffing' in POSDCORB refers to:", options: ["Supervising employees", "Manning the organization with suitable personnel", "Creating the organization's structure", "Setting budgets"], answer: "Manning the organization with suitable personnel" },
+                { question: "Guiding, motivating, and leading people falls under which management function?", options: ["Planning", "Organizing", "Directing", "Controlling"], answer: "Directing" },
+                { question: "Which function bridges the gap from where an organization is to where it wants to be?", options: ["Planning", "Staffing", "Reporting", "Coordinating"], answer: "Planning" },
+                { question: "Fiscal planning, accounting, and control are part of which function in POSDCORB?", options: ["Reporting", "Coordinating", "Budgeting", "Organizing"], answer: "Budgeting" },
+                { question: "Synchronizing the activities of different individuals and departments for harmonious work is:", options: ["Directing", "Coordinating", "Staffing", "Planning"], answer: "Coordinating" }
+            ],
+            'planning': [
+                { question: "The first step in the planning process is:", options: ["Developing Premises", "Identifying Alternatives", "Setting Objectives", "Implementing the Plan"], answer: "Setting Objectives" },
+                { question: "Making assumptions about the future environment is known as:", options: ["Setting Objectives", "Developing Premises", "Evaluating Alternatives", "Follow-Up Action"], answer: "Developing Premises" },
+                { question: "The final step in the planning procedure is:", options: ["Selecting an Alternative", "Follow-Up Action", "Setting Objectives", "Implementing the Plan"], answer: "Follow-Up Action" },
+                { question: "Why is planning considered a continuous process?", options: ["It is only done once", "It deals with the uncertain future and must be constantly reviewed", "It only concerns top managers", "It is not related to other functions"], answer: "It deals with the uncertain future and must be constantly reviewed" },
+                { question: "Which statement best describes the nature of planning?", options: ["It is a static, one-time event", "It is hierarchical and concerns all managers", "It is only concerned with the past", "It has no impact on future effectiveness"], answer: "It is hierarchical and concerns all managers" },
+                { question: "Assessing the pros and cons of different courses of action is which step in planning?", options: ["Identifying Alternatives", "Developing Premises", "Evaluating Alternatives", "Setting Objectives"], answer: "Evaluating Alternatives" }
+            ],
+             'organization': [
+                 { question: "The simplest organization form with a direct vertical chain of command is:", options: ["Line and Staff", "Matrix", "Committee", "Line Organization"], answer: "Line Organization" },
+                 { question: "Which theory views the organization as an open, adaptive system interacting with its environment?", options: ["Classical Theory", "Neo-Classical Theory", "Modern Theory", "Scientific Management"], answer: "Modern Theory" },
+                 { question: "What is the primary advantage of a Line and Staff organization over a Line organization?", options: ["It is simpler", "It has a clearer chain of command", "It incorporates specialist advice", "It is less expensive"], answer: "It incorporates specialist advice" },
+                 { question: "The Classical theory of organization views the organization as a:", options: ["Social system", "Machine", "Family", "Chaotic system"], answer: "Machine" },
+                 { question: "In a Line and Staff organization, what kind of authority do staff members have?", options: ["Direct command authority", "Advisory authority", "No authority", "Superior authority over line managers"], answer: "Advisory authority" },
+                 { question: "Grouping activities by business functions like Marketing or Finance is known as:", options: ["Line Organization", "Matrix Organization", "Functional Organization", "Line and Staff Organization"], answer: "Functional Organization" }
+            ],
+            'org_concepts': [
+                { question: "The number of subordinates a manager can effectively supervise is called:", options: ["Chain of Command", "Unity of Direction", "Span of Management", "Delegation"], answer: "Span of Management" },
+                { question: "The process of grouping activities into manageable units is known as:", options: ["Delegation", "Departmentation", "Centralization", "Formalization"], answer: "Departmentation" },
+                { question: "The selective dispersal of authority to lower levels in an organization is:", options: ["Centralization", "Delegation", "Decentralization", "Span of Control"], answer: "Decentralization" },
+                { question: "The network of personal and social relationships that arise spontaneously is called:", options: ["Formal Organization", "Bureaucracy", "Informal Organization", "Departmentation"], answer: "Informal Organization" },
+                { question: "Granting a subordinate the power to take decisions and issue instructions is an example of:", options: ["Responsibility", "Delegation", "Span of Management", "Centralization"], answer: "Delegation" },
+                { question: "In which structure is decision-making power confined to top management?", options: ["Decentralization", "Delegation", "Centralization", "Informal Organization"], answer: "Centralization" }
+            ],
+             'staffing': [
+                { question: "The management function of finding the right people for the right job is:", options: ["Planning", "Organizing", "Staffing", "Controlling"], answer: "Staffing" },
+                { question: "The 'positive' process of searching for prospective employees is:", options: ["Selection", "Training", "Recruitment", "Development"], answer: "Recruitment" },
+                { question: "Which staffing activity is often described as a 'negative' process because more candidates are turned away than hired?", options: ["Recruitment", "Selection", "Training", "Welfare"], answer: "Selection" },
+                { question: "A continuous process of learning designed to bring behavioral change in executives is called:", options: ["Recruitment", "Selection", "Training", "Development"], answer: "Development" },
+                { question: "Providing facilities and benefits for the comfort of an employee is part of:", options: ["Selection", "Welfare", "Recruitment", "Training"], answer: "Welfare" },
+                { question: "The primary purpose of recruitment is to:", options: ["Hire the first person who applies", "Create a large pool of applicants", "Test the applicants", "Train new employees"], answer: "Create a large pool of applicants" }
+            ],
+            'directing': [
+                 { question: "A person who is responsible for overseeing a team, setting goals, and delegating tasks is a:", options: ["Leader", "Supervisor", "Mentor", "Consultant"], answer: "Supervisor" },
+                 { question: "Open communication and positive reinforcement are key components of:", options: ["Controlling", "Planning", "Budgeting", "Motivation"], answer: "Motivation" },
+                 { question: "The directing function of management includes:", options: ["Setting standards and budgeting", "Recruitment and selection", "Leadership, communication, and motivation", "Creating departments"], answer: "Leadership, communication, and motivation" },
+                 { question: "What is the key difference between a leader and a supervisor?", options: ["A leader has a formal title, a supervisor does not", "A leader influences and empowers, while a supervisor's role is defined by authority", "Supervisors are always better leaders", "There is no difference"], answer: "A leader influences and empowers, while a supervisor's role is defined by authority" },
+                 { question: "Acknowledging work well done is an example of which motivational technique?", options: ["Negative reinforcement", "Punishment", "Positive reinforcement", "Extinction"], answer: "Positive reinforcement" }
+            ],
+            'controlling': [
+                { question: "Which function involves comparing actual performance with standards and taking corrective action?", options: ["Planning", "Directing", "Coordinating", "Controlling"], answer: "Controlling" },
+                { question: "The first step in the control process is:", options: ["Measurement of Performance", "Taking Remedial Actions", "Comparison of Performance", "Establishment of Standards"], answer: "Establishment of Standards" },
+                { question: "Analyzing the relationship between sales volume, costs, and profits is done using:", options: ["Budgeting", "Financial Statements", "Personal Observation", "Break-Even Analysis"], answer: "Break-Even Analysis" },
+                { question: "The management practice of focusing on significant deviations from the standard is known as:", options: ["Total Quality Management", "Control by Exception", "Management by Objectives", "Budgeting"], answer: "Control by Exception" },
+                { question: "Which control technique provides a future projection of a firm's financial position?", options: ["Personal Observation", "Budgeting", "Break-Even Analysis", "Financial Statements"], answer: "Budgeting" },
+                { question: "What is the final step in the controlling process?", options: ["Establishment of Standards", "Measurement of performance", "Taking remedial actions", "Comparison of performance"], answer: "Taking remedial actions" }
+            ],
+            'social_responsibility': [
+                { question: "According to Peter Drucker, social responsibility requires managers to consider:", options: ["Maximizing shareholder wealth only", "Promoting the public good", "Following government regulations only", "Employee satisfaction above all"], answer: "Promoting the public good" },
+                { question: "Voluntary efforts by a business to contribute to social well-being is known as:", options: ["Corporate Profitability", "Legal Compliance", "Social Responsibility (CSR)", "Market Dominance"], answer: "Social Responsibility (CSR)" },
+                { question: "The moral idea behind social responsibility is that businesses:", options: ["Should avoid all social contact", "Use society's resources and must give back", "Are only responsible to their shareholders", "Exist only to make a profit"], answer: "Use society's resources and must give back" },
+                { question: "Another term for Social Responsibility of Business is:", options: ["Market Strategy", "Corporate Citizenship", "Profit Maximization", "Cost Reduction"], answer: "Corporate Citizenship" }
+            ]
+        };
+
+        // --- APPLICATION LOGIC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+            const desktopTopicsList = document.getElementById('desktop-topics-list');
+            const mobileTopicsList = document.getElementById('mobile-topics-list');
+            const theoryTextContent = document.getElementById('theory-text-content');
+            const integratedQuizContainer = document.getElementById('integrated-quiz-container');
+            let integratedQuizState = {};
+
+            // --- Mobile Menu Handlers ---
+            const openMobileMenu = () => {
+                mobileMenu.classList.remove('mobile-menu-closed');
+                mobileMenu.classList.add('mobile-menu-open');
+                mobileMenuOverlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Prevent background scroll
+            };
+
+            const closeMobileMenu = () => {
+                mobileMenu.classList.remove('mobile-menu-open');
+                mobileMenu.classList.add('mobile-menu-closed');
+                mobileMenuOverlay.classList.add('hidden');
+                document.body.style.overflow = ''; // Restore scroll
+            };
+            
+            hamburgerBtn.addEventListener('click', openMobileMenu);
+            closeMenuBtn.addEventListener('click', closeMobileMenu);
+            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+            // --- Main App Logic ---
+            const renderTheoryAndQuiz = (key) => {
+                theoryTextContent.innerHTML = theoryData[key].content;
+                integratedQuizContainer.innerHTML = '';
+                const questions = topicMcqs[key];
+
+                if (questions && questions.length > 0) {
+                    integratedQuizContainer.innerHTML = `
+                        <div class="integrated-quiz not-prose p-6 rounded-lg mt-8">
+                            <h3 class="text-xl font-bold mb-4 text-gray-800"><i class="fas fa-question-circle mr-2 text-indigo-500"></i>Check Your Understanding</h3>
+                            <div id="integrated-question-container">
+                                <p id="integrated-progress-text" class="text-sm text-gray-500 font-medium mb-2"></p>
+                                <h4 id="integrated-question-text" class="text-lg font-semibold mb-4 text-gray-900 min-h-[4rem]"></h4>
+                                <div id="integrated-options-container" class="space-y-3"></div>
+                                <div id="integrated-feedback-container" class="mt-4 p-3 rounded-lg hidden"></div>
+                                <button id="integrated-next-question-btn" class="mt-4 w-full sm:w-auto bg-indigo-600 text-white py-2 px-5 rounded-lg hover:bg-indigo-700 transition-colors font-semibold disabled:bg-gray-400">Next</button>
+                            </div>
+                            <div id="integrated-result-view" class="hidden text-center py-4">
+                                <i class="fas fa-award text-4xl text-indigo-500 mb-3"></i>
+                                <h3 class="text-xl font-bold mb-2">Quiz Complete!</h3>
+                                <p id="integrated-score-text" class="text-lg mb-4"></p>
+                                <button id="integrated-retry-btn" class="bg-green-500 text-white py-2 px-5 rounded-lg hover:bg-green-600 transition-colors font-semibold">Try Again</button>
+                            </div>
+                        </div>
+                    `;
+                    startIntegratedQuiz(key);
+                }
+
+                document.querySelectorAll('.topics-list a').forEach(a => a.classList.remove('active-topic'));
+                document.querySelectorAll(`.topics-list a[data-key="${key}"]`).forEach(a => a.classList.add('active-topic'));
+                document.getElementById('theory-content-area').scrollTop = 0;
+            };
+
+            const startIntegratedQuiz = (key) => {
+                integratedQuizState = {
+                    key: key,
+                    questions: [...topicMcqs[key]].sort(() => 0.5 - Math.random()),
+                    index: 0,
+                    score: 0,
+                };
+                
+                document.getElementById('integrated-question-container').classList.remove('hidden');
+                document.getElementById('integrated-result-view').classList.add('hidden');
+                
+                document.getElementById('integrated-retry-btn').onclick = () => startIntegratedQuiz(key);
+                document.getElementById('integrated-next-question-btn').onclick = () => {
+                    integratedQuizState.index++;
+                    if (integratedQuizState.index < integratedQuizState.questions.length) {
+                        displayIntegratedQuestion();
+                    } else {
+                        showIntegratedQuizResults();
+                    }
+                };
+                displayIntegratedQuestion();
+            };
+            
+            const displayIntegratedQuestion = () => {
+                const { questions, index } = integratedQuizState;
+                const question = questions[index];
+
+                document.getElementById('integrated-feedback-container').classList.add('hidden');
+                document.getElementById('integrated-next-question-btn').disabled = true;
+                document.getElementById('integrated-progress-text').textContent = `Question ${index + 1} of ${questions.length}`;
+                document.getElementById('integrated-question-text').textContent = question.question;
+
+                const optionsContainer = document.getElementById('integrated-options-container');
+                optionsContainer.innerHTML = '';
+                const shuffledOptions = [...question.options].sort(() => 0.5 - Math.random());
+                shuffledOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.classList.add('w-full', 'text-left', 'p-3', 'border', 'border-gray-300', 'rounded-lg', 'hover:bg-indigo-50', 'bg-white', 'transition-all');
+                    button.onclick = () => selectIntegratedOption(button, option);
+                    optionsContainer.appendChild(button);
+                });
+            };
+
+            const selectIntegratedOption = (button, selectedOption) => {
+                document.querySelectorAll('#integrated-options-container button').forEach(btn => btn.disabled = true);
+                const { questions, index } = integratedQuizState;
+                const question = questions[index];
+                const isCorrect = selectedOption === question.answer;
+
+                const feedbackContainer = document.getElementById('integrated-feedback-container');
+                feedbackContainer.classList.remove('hidden');
+
+                if (isCorrect) {
+                    integratedQuizState.score++;
+                    button.className = 'w-full text-left p-3 border-2 border-green-500 rounded-lg bg-green-50';
+                    feedbackContainer.innerHTML = `<p class="font-semibold text-sm text-green-700">Correct!</p>`;
+                } else {
+                    button.className = 'w-full text-left p-3 border-2 border-red-500 rounded-lg bg-red-50';
+                    feedbackContainer.innerHTML = `<p class="font-semibold text-sm text-red-700">Incorrect. The correct answer was: <strong>${question.answer}</strong></p>`;
+                }
+                
+                const nextBtn = document.getElementById('integrated-next-question-btn');
+                nextBtn.disabled = false;
+                nextBtn.textContent = (index === questions.length - 1) ? 'Show Results' : 'Next';
+            };
+
+            const showIntegratedQuizResults = () => {
+                const { questions, score } = integratedQuizState;
+                const percentage = Math.round((score / questions.length) * 100);
+                document.getElementById('integrated-score-text').innerHTML = `Your Score: <span class="font-bold text-indigo-600">${score} / ${questions.length}</span> (${percentage}%)`;
+                document.getElementById('integrated-question-container').classList.add('hidden');
+                document.getElementById('integrated-result-view').classList.remove('hidden');
+            };
+
+            // Populate both desktop and mobile topic lists
+            [desktopTopicsList, mobileTopicsList].forEach(list => {
+                list.innerHTML = ''; // Clear existing
+                list.classList.add('topics-list');
+                Object.keys(theoryData).forEach(key => {
+                    const li = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = `#${key}`;
+                    link.dataset.key = key;
+                    link.className = "block px-4 py-2 rounded-md text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors";
+                    link.textContent = theoryData[key].title;
+                    link.onclick = (e) => {
+                        e.preventDefault();
+                        renderTheoryAndQuiz(key);
+                        closeMobileMenu(); // Close menu on selection
+                    };
+                    li.appendChild(link);
+                    list.appendChild(li);
+                });
+            });
+
+            // Initial Load
+            renderTheoryAndQuiz(Object.keys(theoryData)[0]);
+        });
+    </script>
+</body>
+</html>
